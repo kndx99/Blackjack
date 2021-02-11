@@ -1,24 +1,40 @@
+/**
+ * Lo siguiete es una funcion autoinvocada, la cual se define y se ejecuta al mismo tiempo
+ * Esto se le conoce tambien como un modulo, y es una medida de seguridad para el navegador
+ * Ya que las variables y constantes dentro del codigo no seran visibles para el usuario 
+ */
 (() => {
     'use strict'
 
     let deck = [];
-    let tipos = ['C', 'H', 'D', 'S']
-    let especiales = ['A', 'J', 'Q', 'K'];
+    let puntosJugadores = [];
+    const tipos = ['C', 'H', 'D', 'S'],
+        especiales = ['A', 'J', 'Q', 'K'];
 
-    let puntosJugador = 0,
-        puntosComputador = 0;
+    // Referencias del HTML
+    const btnPedir = document.querySelector('#btnPedir'),
+        btnDetener = document.querySelector('#btnDetener'),
+        btnNuevo = document.querySelector('#btnNuevo'),
+        divCartasPC = document.querySelector('#computadora-cartas'),
+        divCartasJugador = document.querySelector('#jugador-cartas'),
+        smalls = document.querySelectorAll('small');
 
-    const jugador = prompt('Cual es su nombre?');
-    const nombreJugador = document.querySelector('#jugador');
-    const smalls = document.querySelectorAll('small');
+    /**
+     * Esta funcion se encarga de inicializar el juego con el numero de jugadores indicado
+     * @param {int} numJugadores 
+     */
+    const inicializarJuego = (numJugadores = 2) => {
+        deck = crearDeck();
+        for (let i = 0; i < numJugadores; i++) {
+            puntosJugadores.push(0);
+        }
+        console.log({ puntosJugadores });
+    }
 
-    const btnPedir = document.querySelector('#btnPedir');
-    const btnDetener = document.querySelector('#btnDetener');
-    const btnNuevo = document.querySelector('#btnNuevo');
-
-    const divCartasPC = document.querySelector('#computadora-cartas');
-    const divCartasJugador = document.querySelector('#jugador-cartas');
-
+    /**
+     * Esta funcion se encarga de realizar un efecto de transicion a las cartas que aparecen en el juego
+     * @param {*} element 
+     */
     function unfade(element) {
         var op = 0.1;
         var timer = setInterval(function() {
@@ -31,27 +47,26 @@
         }, 10);
     }
 
+    /**
+     * Con base en los arrelgos 'tipos' y 'especiales' se hacen las combinaciones de todas las cartas posibles en el deck y se almacenan para poder ser usados por el juego. Ademas hace uso de la libreria underscore para mezclar el deck
+     */
     const crearDeck = () => {
         for (let i = 2; i <= 10; i++) {
             for (let tipo of tipos) {
                 deck.push(i + tipo);
             }
         }
-        // for (let esp of especiales) {
-        //     for (tipo of tipos) {
-        //         deck.push(esp + tipo);
-        //     }
-        // }
         for (let tipo of tipos) {
             for (let esp of especiales) {
                 deck.push(esp + tipo);
             }
         }
-        deck = _.shuffle(deck);
-        console.log(deck);
-        return deck;
+        return _.shuffle(deck);
     }
 
+    /**
+     * Self-explanatory: saca una carta del deck y la retorna, de no haber cartas en el deck, muestra un aviso con lo ocurrido
+     */
     const pedirCarta = () => {
         if (deck.length > 0) {
             return deck.pop();
@@ -60,9 +75,17 @@
         }
     };
 
+    /**
+     * Recibe una carta y muestra su valor
+     * @param {carta} carta 
+     */
     const valorCarta = (carta) => {
         const letra = carta.substring(0, carta.length - 1)
         return !isNaN(letra) ? letra * 1 : letra === 'A' ? 11 : 10;
+    }
+
+    const acumularPuntos = () => {
+
     }
 
     const turnoComputadora = (puntosMinimos) => {
@@ -93,9 +116,7 @@
     }
 
     const reset = () => {
-        console.clear();
-        deck = [];
-        crearDeck();
+        inicializarJuego();
         bloqueoBotones(false);
         puntosComputador = 0;
         puntosJugador = 0;
@@ -152,7 +173,4 @@
             reset();
         }
     }
-
-    nombreJugador.innerText = jugador + ':';
-    crearDeck();
 })();
