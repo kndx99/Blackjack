@@ -21,7 +21,7 @@ h1 {
     padding: 15px;
     font-size: 25px;
     text-align: center;
-    background-color: rgb(2, 2, 2);
+    background-color: rgba(0, 0, 0, 0.308);
     box-shadow: 0px 0px 20px rgb(40, 40, 40);
 }
 
@@ -31,6 +31,18 @@ h1 {
     left: 100px;
     margin-left: -75px;
     box-shadow: 0px 10px 20px rgb(36, 36, 36);
+}
+
+.footer {
+    position: fixed;
+    font-size: 12px;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.308);
+    color: white;
+    text-align: center;
+    font-family: 'Roboto Mono', monospace;
 }
 
 #jugador-cartas,
