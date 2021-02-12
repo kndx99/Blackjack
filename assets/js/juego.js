@@ -4,6 +4,7 @@
  * Ya que las variables y constantes dentro del codigo no seran visibles para el usuario 
  */
 const miModulo = (() => {
+
     'use strict'
 
     let deck = [];
@@ -18,10 +19,6 @@ const miModulo = (() => {
         divCartasJugador = document.querySelectorAll('.divCartas'),
         puntosHTML = document.querySelectorAll('small');
 
-    /**
-     * Esta funcion se encarga de inicializar el juego con el numero de jugadores indicado
-     * @param {int} numJugadores 
-     */
     const inicializarJuego = (numJugadores = 2) => {
         deck = crearDeck();
         puntosJugadores = []
@@ -32,10 +29,6 @@ const miModulo = (() => {
         divCartasJugador.forEach(elem => elem.innerHTML = '');
     }
 
-    /**
-     * Esta funcion se encarga de realizar un efecto de transicion a las cartas que aparecen en el juego
-     * @param {*} element 
-     */
     function unfade(element) {
         var op = 0.1;
         var timer = setInterval(function() {
@@ -48,9 +41,6 @@ const miModulo = (() => {
         }, 10);
     }
 
-    /**
-     * Con base en los arrelgos 'tipos' y 'especiales' se hacen las combinaciones de todas las cartas posibles en el deck y se almacenan para poder ser usados por el juego. Ademas hace uso de la libreria underscore para mezclar el deck
-     */
     const crearDeck = () => {
         deck = [];
         for (let i = 2; i <= 10; i++) {
@@ -66,9 +56,6 @@ const miModulo = (() => {
         return _.shuffle(deck);
     }
 
-    /**
-     * Self-explanatory: saca una carta del deck y la retorna, de no haber cartas en el deck, muestra un aviso con lo ocurrido
-     */
     const pedirCarta = () => {
         if (deck.length > 0) {
             return deck.pop();
@@ -77,10 +64,6 @@ const miModulo = (() => {
         }
     };
 
-    /**
-     * Recibe una carta y muestra su valor
-     * @param {carta} carta 
-     */
     const valorCarta = (carta) => {
         const letra = carta.substring(0, carta.length - 1);
         return !isNaN(letra) ? letra * 1 : letra === 'A' ? 11 : 10;
