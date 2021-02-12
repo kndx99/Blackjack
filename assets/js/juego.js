@@ -3,7 +3,7 @@
  * Esto se le conoce tambien como un modulo, y es una medida de seguridad para el navegador
  * Ya que las variables y constantes dentro del codigo no seran visibles para el usuario 
  */
-(() => {
+const miModulo = (() => {
     'use strict'
 
     let deck = [];
@@ -28,8 +28,8 @@
         for (let i = 0; i < numJugadores; i++) {
             puntosJugadores.push(0);
         }
-
-        console.log({ puntosJugadores });
+        puntosHTML.forEach(elem => elem.innerText = 0);
+        divCartasJugador.forEach(elem => elem.innerHTML = '');
     }
 
     /**
@@ -106,7 +106,7 @@
         const [puntosMinimos, puntosComputadora] = puntosJugadores;
         setTimeout(() => {
             if (puntosComputadora === puntosMinimos) {
-                alert('Nadie gana :(');
+                alert('Empate');
             } else if (puntosMinimos > 21) {
                 alert('Computadora gana')
             } else if (puntosComputadora > 21) {
@@ -128,6 +128,7 @@
     }
 
     const reset = () => {
+        console.clear();
         inicializarJuego();
         bloqueoBotones(false);
     }
@@ -153,13 +154,18 @@
         }
     });
 
-    btnNuevo.addEventListener('click', () => {
-        reset();
-    });
-
     btnDetener.addEventListener('click', () => {
         btnPedir.disabled = true;
         btnDetener.disabled = true;
         turnoComputadora(puntosJugadores[0]);
     });
+
+    btnNuevo.addEventListener('click', () => {
+        reset();
+    });
+
+    // Esto es el valor de retorno, el cual sera publico fuera del modulo
+    return {
+        nuevoJuego: inicializarJuego
+    };
 })();
