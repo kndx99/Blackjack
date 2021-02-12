@@ -15,9 +15,8 @@
     const btnPedir = document.querySelector('#btnPedir'),
         btnDetener = document.querySelector('#btnDetener'),
         btnNuevo = document.querySelector('#btnNuevo'),
-        divCartasPC = document.querySelector('#computadora-cartas'),
-        divCartasJugador = document.querySelector('#jugador-cartas'),
-        smalls = document.querySelectorAll('small');
+        divCartasJugador = document.querySelectorAll('.divCartas'),
+        puntosHTML = document.querySelectorAll('small');
 
     /**
      * Esta funcion se encarga de inicializar el juego con el numero de jugadores indicado
@@ -25,9 +24,11 @@
      */
     const inicializarJuego = (numJugadores = 2) => {
         deck = crearDeck();
+        puntosJugadores = []
         for (let i = 0; i < numJugadores; i++) {
             puntosJugadores.push(0);
         }
+
         console.log({ puntosJugadores });
     }
 
@@ -51,6 +52,7 @@
      * Con base en los arrelgos 'tipos' y 'especiales' se hacen las combinaciones de todas las cartas posibles en el deck y se almacenan para poder ser usados por el juego. Ademas hace uso de la libreria underscore para mezclar el deck
      */
     const crearDeck = () => {
+        deck = [];
         for (let i = 2; i <= 10; i++) {
             for (let tipo of tipos) {
                 deck.push(i + tipo);
@@ -80,50 +82,54 @@
      * @param {carta} carta 
      */
     const valorCarta = (carta) => {
-        const letra = carta.substring(0, carta.length - 1)
+        const letra = carta.substring(0, carta.length - 1);
         return !isNaN(letra) ? letra * 1 : letra === 'A' ? 11 : 10;
     }
 
-    const acumularPuntos = () => {
+    const acumularPuntos = (carta, turno) => {
+        puntosJugadores[turno] = puntosJugadores[turno] + valorCarta(carta);
+        puntosHTML[turno].innerText = puntosJugadores[turno];
+        return puntosJugadores[turno];
+    }
 
+    const crearCarta = (carta, turno) => {
+        const imgCarta = document.createElement('img');
+        imgCarta.src = `/assets/cartas/${carta}.png`;
+        imgCarta.classList.add('carta');
+        imgCarta.style.opacity = 0;
+        unfade(imgCarta);
+        divCartasJugador[turno].append(imgCarta);
+    }
+
+    const determinarGanador = () => {
+        // Desestructuracion de arreglos
+        const [puntosMinimos, puntosComputadora] = puntosJugadores;
+        setTimeout(() => {
+            if (puntosComputadora === puntosMinimos) {
+                alert('Nadie gana :(');
+            } else if (puntosMinimos > 21) {
+                alert('Computadora gana')
+            } else if (puntosComputadora > 21) {
+                alert('Jugador Gana');
+            } else {
+                alert('Computadora Gana')
+            }
+        }, 500);
     }
 
     const turnoComputadora = (puntosMinimos) => {
-
+        let puntosComputador = 0;
         do {
             const carta = pedirCarta();
-
-            puntosComputador = puntosComputador + valorCarta(carta);
-            smalls[1].innerText = puntosComputador;
-
-            const imgCarta = document.createElement('img');
-            imgCarta.src = `/assets/cartas/${carta}.png`;
-            imgCarta.classList.add('carta');
-            divCartasPC.append(imgCarta);
-
-
-            if (puntosMinimos > 21) {
-                console.warn('Gana la PC');
-                break;
-            }
+            puntosComputador = acumularPuntos(carta, puntosJugadores.length - 1);
+            crearCarta(carta, puntosJugadores.length - 1);
         } while ((puntosComputador < puntosMinimos) && (puntosMinimos <= 21));
-
-        setTimeout(() => {
-            mensajeFinal();
-        }, 500);
-
-
+        determinarGanador();
     }
 
     const reset = () => {
         inicializarJuego();
         bloqueoBotones(false);
-        puntosComputador = 0;
-        puntosJugador = 0;
-        smalls[0].innerText = puntosJugador;
-        smalls[1].innerText = puntosComputador;
-        divCartasJugador.innerHTML = '';
-        divCartasPC.innerHTML = '';
     }
 
     const bloqueoBotones = (bool) => {
@@ -133,15 +139,8 @@
 
     btnPedir.addEventListener('click', () => {
         const carta = pedirCarta();
-        puntosJugador = puntosJugador + valorCarta(carta);
-        smalls[0].innerText = puntosJugador;
-
-        const imgCarta = document.createElement('img');
-        imgCarta.src = `/assets/cartas/${carta}.png`;
-        imgCarta.classList.add('carta');
-        imgCarta.style.opacity = 0;
-        unfade(imgCarta);
-        divCartasJugador.append(imgCarta);
+        const puntosJugador = acumularPuntos(carta, 0);
+        crearCarta(carta, 0)
 
         if (puntosJugador > 21) {
             console.warn('Perdiste');
@@ -161,16 +160,6 @@
     btnDetener.addEventListener('click', () => {
         btnPedir.disabled = true;
         btnDetener.disabled = true;
-        turnoComputadora(puntosJugador);
+        turnoComputadora(puntosJugadores[0]);
     });
-
-    const mensajeFinal = () => {
-        const mensaje = puntosComputador === puntosJugador ? 'Empate' :
-            puntosJugador > 21 ? 'Gana PC' :
-            ((puntosJugador < puntosComputador) && (puntosComputador <= 21)) ? 'Gana PC' : `Gana ${jugador}`;
-
-        if (confirm(mensaje)) {
-            reset();
-        }
-    }
 })();
