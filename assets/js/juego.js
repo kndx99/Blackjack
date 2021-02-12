@@ -16,6 +16,7 @@ const miModulo = (() => {
     const btnPedir = document.querySelector('#btnPedir'),
         btnDetener = document.querySelector('#btnDetener'),
         btnNuevo = document.querySelector('#btnNuevo'),
+        btnAyuda = document.querySelector('#btnAyuda'),
         divCartasJugador = document.querySelectorAll('.divCartas'),
         puntosHTML = document.querySelectorAll('small');
 
@@ -145,6 +146,10 @@ const miModulo = (() => {
 
     btnNuevo.addEventListener('click', () => {
         reset();
+    });
+
+    btnAyuda.addEventListener('click', () => {
+        alert("El objetivo de este juego es sumar 21 puntos o no pasarse de esta cifra, pero siempre sobrepasando el valor que tiene el oponente (La PC) para ganar la partida. Las cartas del 2 al 10 valen su valor natural; las cartas J, Q y K también valen 10 y el A's 11.");
     });
 
     // Esto es el valor de retorno, el cual sera publico fuera del modulo
