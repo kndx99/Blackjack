@@ -2,6 +2,8 @@
  * Lo siguiete es una funcion autoinvocada, la cual se define y se ejecuta al mismo tiempo
  * Esto se le conoce tambien como un modulo, y es una medida de seguridad para el navegador
  * Ya que las variables y constantes dentro del codigo no seran visibles para el usuario
+ * 
+ * Dato importante, el nombre de las cartas esta dado por 2 valores
  */
 const miModulo = (() => {
     "use strict";
@@ -22,9 +24,12 @@ const miModulo = (() => {
     const inicializarJuego = (numJugadores = 2) => {
         deck = crearDeck();
         puntosJugadores = [];
+
+        // En un futuro, el codigo se podria editar para tener mas de 2 jugadores
         for (let i = 0; i < numJugadores; i++) {
             puntosJugadores.push(0);
         }
+
         // Por cada elemento que sea de la clase smalll y .divCartas, limpia lo que tenga dentro del tag correspondiente
         puntosHTML.forEach((elem) => (elem.innerText = 0));
         divCartasJugador.forEach((elem) => (elem.innerHTML = ""));
@@ -36,7 +41,7 @@ const miModulo = (() => {
      */
     function unfade(element) {
         var op = 0.1;
-        var timer = setInterval(function () {
+        var timer = setInterval(function() {
             if (op >= 1) {
                 clearInterval(timer);
             }
@@ -90,10 +95,10 @@ const miModulo = (() => {
     };
 
     /**
-     *
+     * Suma los puntos del turno al jugador indicado
      * @param {carta} carta
      * @param {int} turno
-     * @returns
+     * @returns puntos del jugador
      */
     const acumularPuntos = (carta, turno) => {
         puntosJugadores[turno] = puntosJugadores[turno] + valorCarta(carta);
@@ -101,7 +106,10 @@ const miModulo = (() => {
         return puntosJugadores[turno];
     };
 
+
     const crearCarta = (carta, turno) => {
+        // Esto es interesante e importante porque vamos a crear un elemento HTML y lo vamos a agregar a dentro de un tag en nuestro archivo
+        // Por esto imgCarta se le pueden agregar los mismos elementos de un tag normal de HTML 
         const imgCarta = document.createElement("img");
         imgCarta.src = `/assets/cartas/${carta}.png`;
         imgCarta.classList.add("carta");
@@ -110,6 +118,10 @@ const miModulo = (() => {
         divCartasJugador[turno].append(imgCarta);
     };
 
+
+    /**
+     * Determina el ganador basado en los puntos de cada uno
+     */
     const determinarGanador = () => {
         // Desestructuracion de arreglos
         const [puntosMinimos, puntosComputadora] = puntosJugadores;
@@ -126,6 +138,10 @@ const miModulo = (() => {
         }, 500);
     };
 
+    /**
+     * Esta funcion realiza el turno de la computadora basandose en el puntaje que tenga el jugador principal
+     * @param {int} puntosMinimos 
+     */
     const turnoComputadora = (puntosMinimos) => {
         let puntosComputador = 0;
         do {
