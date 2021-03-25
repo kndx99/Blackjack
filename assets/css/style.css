@@ -30,7 +30,12 @@ h1 {
     position: relative;
     left: 100px;
     margin-left: -75px;
-    box-shadow: 0px 10px 20px rgb(36, 36, 36);
+    transition: transform .2s;
+    filter: drop-shadow(0px 5px 7px rgba(5, 36, 46, 0.616));
+}
+
+.carta:hover {
+    transform: scale(1.05)
 }
 
 .footer {
