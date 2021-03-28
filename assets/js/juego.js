@@ -90,7 +90,7 @@ const miModulo = (() => {
     };
 
     /**
-     *
+     * Esto sirve para acumular puntoss
      * @param {carta} carta
      * @param {int} turno
      * @returns
